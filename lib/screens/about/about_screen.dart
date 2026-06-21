@@ -20,14 +20,16 @@ class AboutScreen extends ConsumerWidget {
         padding: EdgeInsets.all(screenWidth * 0.05),
         child: Column(
           children: [
-            const Icon(Icons.eco, size: 56, color: AppTheme.primary),
+            Image.asset(
+              'assets/icon/icon_foreground.png',
+              width: screenWidth * 0.18,
+            ),
             SizedBox(height: screenHeight * 0.012),
             Text(
               'PoultriSense',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             Text(
               'by OLUTECH Engineering',
@@ -35,14 +37,24 @@ class AboutScreen extends ConsumerWidget {
             ),
             SizedBox(height: screenHeight * 0.03),
 
-            // ── Paired Device ─────────────────────────────────────────
+            // ── Project Owner ───────────────────────────────────────────
+            const _OwnerCard(),
+            SizedBox(height: screenHeight * 0.02),
+
+            // ── Developed By ────────────────────────────────────────────
+            const _DeveloperCard(),
+            SizedBox(height: screenHeight * 0.03),
+
+            // ── Paired Device ───────────────────────────────────────────
             Card(
               child: Padding(
                 padding: EdgeInsets.all(screenWidth * 0.05),
                 child: Column(
                   children: [
-                    Text('Paired Device',
-                        style: Theme.of(context).textTheme.bodySmall),
+                    Text(
+                      'Paired Device',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                     SizedBox(height: screenHeight * 0.015),
                     if (deviceId != null) ...[
                       QrImageView(
@@ -83,7 +95,7 @@ class AboutScreen extends ConsumerWidget {
             ),
             SizedBox(height: screenHeight * 0.03),
 
-            // ── Project Info ──────────────────────────────────────────
+            // ── Project Info ─────────────────────────────────────────────
             Card(
               child: Padding(
                 padding: EdgeInsets.all(screenWidth * 0.05),
@@ -103,11 +115,26 @@ class AboutScreen extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     SizedBox(height: screenHeight * 0.015),
-                    const _InfoRow(label: 'Temperature & Humidity', value: 'AHT21'),
-                    const _InfoRow(label: 'Ammonia Monitoring', value: 'MQ-135'),
-                    const _InfoRow(label: 'Edge Controller', value: 'ESP32 (FreeRTOS)'),
-                    const _InfoRow(label: 'Telemetry', value: 'MQTT (EMQX Cloud)'),
-                    const _InfoRow(label: 'Data Storage', value: 'Supabase (PostgreSQL)'),
+                    const _InfoRow(
+                      label: 'Temperature & Humidity',
+                      value: 'AHT21',
+                    ),
+                    const _InfoRow(
+                      label: 'Ammonia Monitoring',
+                      value: 'MQ-135',
+                    ),
+                    const _InfoRow(
+                      label: 'Edge Controller',
+                      value: 'ESP32 (FreeRTOS)',
+                    ),
+                    const _InfoRow(
+                      label: 'Telemetry',
+                      value: 'MQTT (EMQX Cloud)',
+                    ),
+                    const _InfoRow(
+                      label: 'Data Storage',
+                      value: 'Supabase (PostgreSQL)',
+                    ),
                   ],
                 ),
               ),
@@ -118,6 +145,111 @@ class AboutScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+// ── Project Owner Card ────────────────────────────────────────────────────
+
+class _OwnerCard extends StatelessWidget {
+  const _OwnerCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(screenWidth * 0.05),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.school_outlined,
+                  color: AppTheme.primary,
+                  size: screenWidth * 0.05,
+                ),
+                SizedBox(width: screenWidth * 0.02),
+                Text(
+                  'Project Owner',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ],
+            ),
+            SizedBox(height: screenWidth * 0.035),
+            const _InfoRow(label: 'Name', value: 'OLUSI MICHAEL OLUWADAMILARE'),
+            const _InfoRow(label: 'Matric No.', value: 'CPE/HND/F24/034'),
+            const _InfoRow(label: 'Department', value: 'Computer Engineering'),
+            const _InfoRow(
+              label: 'School',
+              value: 'Federal Polytechnic, Ile-Oluji',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Developer Card ─────────────────────────────────────────────────────────
+
+class _DeveloperCard extends StatelessWidget {
+  const _DeveloperCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(screenWidth * 0.06),
+        child: Column(
+          children: [
+            Text('Developed By', style: Theme.of(context).textTheme.bodySmall),
+            SizedBox(height: screenWidth * 0.04),
+            Image.asset(
+              'assets/images/brand_logo.png',
+              width: screenWidth * 0.55,
+            ),
+            SizedBox(height: screenWidth * 0.03),
+            Text(
+              'Olutech Cyberworld',
+              style: TextStyle(
+                fontSize: screenWidth * 0.045,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: screenWidth * 0.025),
+            _ContactRow(
+              icon: Icons.email_outlined,
+              text: 'olutechcyberworld@gmail.com',
+            ),
+            SizedBox(height: screenWidth * 0.012),
+            _ContactRow(icon: Icons.phone_outlined, text: '07015594518'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ContactRow extends StatelessWidget {
+  final IconData icon;
+  final String text;
+
+  const _ContactRow({required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 16, color: AppTheme.textSecondary),
+        const SizedBox(width: 6),
+        SelectableText(text, style: Theme.of(context).textTheme.bodyMedium),
+      ],
     );
   }
 }
@@ -133,11 +265,18 @@ class _InfoRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
+          SizedBox(
+            width: 100,
             child: Text(label, style: Theme.of(context).textTheme.bodySmall),
           ),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
         ],
       ),
     );

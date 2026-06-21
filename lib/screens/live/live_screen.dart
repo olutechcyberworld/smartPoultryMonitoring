@@ -34,6 +34,7 @@ class LiveScreen extends ConsumerWidget {
                         child: SensorCard(
                           label: 'Temperature',
                           value: formatTemperature(reading?.temperature),
+                          icon: Icons.thermostat,
                         ),
                       ),
                       SizedBox(width: screenWidth * 0.02),
@@ -41,6 +42,7 @@ class LiveScreen extends ConsumerWidget {
                         child: SensorCard(
                           label: 'Humidity',
                           value: formatHumidity(reading?.humidity),
+                          icon: Icons.water_drop,
                         ),
                       ),
                     ],

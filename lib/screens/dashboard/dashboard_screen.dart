@@ -13,8 +13,6 @@ import 'package:poultri_sense/widgets/offline_banner.dart';
 import 'package:poultri_sense/widgets/sensor_card.dart';
 import 'package:go_router/go_router.dart';
 
-
-
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
@@ -60,6 +58,7 @@ class DashboardScreen extends ConsumerWidget {
                         child: SensorCard(
                           label: 'Temperature',
                           value: formatTemperature(reading?.temperature),
+                          icon: Icons.thermostat,
                         ),
                       ),
                       SizedBox(width: screenWidth * 0.02),
@@ -67,6 +66,7 @@ class DashboardScreen extends ConsumerWidget {
                         child: SensorCard(
                           label: 'Humidity',
                           value: formatHumidity(reading?.humidity),
+                          icon: Icons.water_drop,
                         ),
                       ),
                       SizedBox(width: screenWidth * 0.02),
@@ -77,6 +77,7 @@ class DashboardScreen extends ConsumerWidget {
                             reading?.ammonia,
                             warmupActive: reading?.warmupActive ?? false,
                           ),
+                          icon: Icons.air,
                           valueColor: AppTheme.ammoniaColor(
                             reading?.ammonia,
                             warmupActive: reading?.warmupActive ?? false,
@@ -131,10 +132,10 @@ class _DeviceStatusCard extends StatelessWidget {
       DeviceStatus.online => (Icons.cloud_done, AppTheme.success, 'Online'),
       DeviceStatus.offline => (Icons.cloud_off, AppTheme.alert, 'Offline'),
       DeviceStatus.connecting => (
-          Icons.cloud_sync,
-          AppTheme.warning,
-          'Connecting…'
-        ),
+        Icons.cloud_sync,
+        AppTheme.warning,
+        'Connecting…',
+      ),
     };
 
     return Card(
@@ -148,7 +149,10 @@ class _DeviceStatusCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+                  Text(
+                    label,
+                    style: TextStyle(color: color, fontWeight: FontWeight.w600),
+                  ),
                   if (deviceId != null)
                     Text(
                       deviceId!,
@@ -182,7 +186,9 @@ class _LastEventCard extends StatelessWidget {
           children: [
             Icon(
               Icons.event_note_outlined,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha:0.6),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             SizedBox(width: screenWidth * 0.03),
             Expanded(
@@ -252,7 +258,9 @@ class _RelayIndicatorTile extends ConsumerWidget {
                 modeLabel,
                 style: TextStyle(
                   fontSize: screenWidth * 0.025,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha:0.5),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
               ),
             ],
@@ -262,4 +270,3 @@ class _RelayIndicatorTile extends ConsumerWidget {
     );
   }
 }
-
