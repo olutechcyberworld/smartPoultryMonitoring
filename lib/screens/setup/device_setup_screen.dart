@@ -14,7 +14,10 @@ class DeviceSetupScreen extends ConsumerStatefulWidget {
 
 class _DeviceSetupScreenState extends ConsumerState<DeviceSetupScreen> {
   final _textController = TextEditingController();
-  final _deviceIdRegex = RegExp(r'^esp32_[A-Fa-f0-9]{6}$');
+  final _deviceIdRegex = RegExp(
+    r'^esp32_[A-Fa-f0-9]{6}$',
+    caseSensitive: false,
+  );
 
   bool _cameraGranted = false;
   bool _scannerOpen = false;
@@ -48,8 +51,9 @@ class _DeviceSetupScreenState extends ConsumerState<DeviceSetupScreen> {
         _error = null;
       });
     } else {
-      setState(() =>
-          _error = 'Camera permission denied — use manual entry below.');
+      setState(
+        () => _error = 'Camera permission denied — use manual entry below.',
+      );
     }
   }
 
@@ -120,14 +124,15 @@ class _DeviceSetupScreenState extends ConsumerState<DeviceSetupScreen> {
                   onPressed: _saving
                       ? null
                       : () => setState(() {
-                            _scannerOpen = true;
-                            _error = null;
-                          }),
+                          _scannerOpen = true;
+                          _error = null;
+                        }),
                   icon: const Icon(Icons.qr_code_scanner),
                   label: const Text('Scan QR Code'),
                   style: ElevatedButton.styleFrom(
-                    padding:
-                        EdgeInsets.symmetric(vertical: screenHeight * 0.018),
+                    padding: EdgeInsets.symmetric(
+                      vertical: screenHeight * 0.018,
+                    ),
                   ),
                 )
               else
@@ -136,26 +141,28 @@ class _DeviceSetupScreenState extends ConsumerState<DeviceSetupScreen> {
                   icon: const Icon(Icons.camera_alt_outlined),
                   label: const Text('Enable Camera & Scan'),
                   style: ElevatedButton.styleFrom(
-                    padding:
-                        EdgeInsets.symmetric(vertical: screenHeight * 0.018),
+                    padding: EdgeInsets.symmetric(
+                      vertical: screenHeight * 0.018,
+                    ),
                   ),
                 ),
             ],
 
             // ── Divider ────────────────────────────────────────────────
             SizedBox(height: screenHeight * 0.03),
-            Row(children: [
-              const Expanded(child: Divider()),
-              Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
-                child: Text(
-                  'or enter manually',
-                  style: Theme.of(context).textTheme.bodySmall,
+            Row(
+              children: [
+                const Expanded(child: Divider()),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
+                  child: Text(
+                    'or enter manually',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
-              ),
-              const Expanded(child: Divider()),
-            ]),
+                const Expanded(child: Divider()),
+              ],
+            ),
             SizedBox(height: screenHeight * 0.03),
 
             // ── Manual Entry ───────────────────────────────────────────
@@ -193,8 +200,10 @@ class _DeviceSetupScreenState extends ConsumerState<DeviceSetupScreen> {
               'The device ID is printed on the label affixed to the enclosure. '
               'It looks like: esp32_AABBCC',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha:0.5),
-                  ),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
               textAlign: TextAlign.center,
             ),
           ],

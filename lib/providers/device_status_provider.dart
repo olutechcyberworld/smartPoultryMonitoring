@@ -17,38 +17,49 @@ class DeviceStatusNotifier extends StateNotifier<DeviceStatus> {
 
   DeviceStatusNotifier({
     required SupabaseService supabase,
-    required String? deviceId,        // public name in constructor
+    required String? deviceId, // public name in constructor
     required MqttService? mqttService,
-  })  : _supabase = supabase,
-        _deviceId = deviceId,         // assigned in initializer list
-        super(DeviceStatus.connecting) {
+  }) : _supabase = supabase,
+       _deviceId = deviceId, // assigned in initializer list
+       super(DeviceStatus.connecting) {
     _initialize(mqttService);
   }
 
   Future<void> _initialize(MqttService? mqttService) async {
-    // Assign field to local variable — Dart flow analysis promotes
-    // local variables to non-null after null check, not fields.
     final deviceId = _deviceId;
     if (deviceId == null) {
       state = DeviceStatus.offline;
       return;
     }
 
-    try {
-      state = await _supabase.fetchLatestDeviceStatus(deviceId);
-    } catch (_) {
-      state = DeviceStatus.offline;
-    }
+    // Always start as connecting — Supabase seed is historical,
+    // not a live confirmation of current connection state.
+    state = DeviceStatus.connecting;
 
     if (mqttService != null) {
       final topic = '${AppConfig.mqttPrefix}/$deviceId/status';
       _subscription = mqttService.messages
           .where((msg) => msg.topic == topic)
           .listen((msg) {
-        state = msg.payload == 'online'
-            ? DeviceStatus.online
-            : DeviceStatus.offline;
-      });
+            state = msg.payload == 'online'
+                ? DeviceStatus.online
+                : DeviceStatus.offline;
+          });
+    }
+
+    // Supabase seed now only used for initial display while MQTT hasn't
+    // delivered a status message yet — shown as a fallback, not authority.
+    try {
+      final seeded = await _supabase.fetchLatestDeviceStatus(deviceId);
+      // Only apply seed if MQTT hasn't already delivered a live update.
+      // If state has moved off 'connecting', MQTT has already spoken — don't overwrite.
+      if (state == DeviceStatus.connecting) {
+        state = seeded;
+      }
+    } catch (_) {
+      if (state == DeviceStatus.connecting) {
+        state = DeviceStatus.offline;
+      }
     }
   }
 
@@ -61,13 +72,13 @@ class DeviceStatusNotifier extends StateNotifier<DeviceStatus> {
 
 final deviceStatusProvider =
     StateNotifierProvider<DeviceStatusNotifier, DeviceStatus>((ref) {
-  final mqtt = ref.watch(mqttServiceProvider);
-  final deviceId = ref.watch(deviceProvider).deviceId;
-  final supabase = ref.watch(supabaseServiceProvider);
+      final mqtt = ref.watch(mqttServiceProvider);
+      final deviceId = ref.watch(deviceProvider).deviceId;
+      final supabase = ref.watch(supabaseServiceProvider);
 
-  return DeviceStatusNotifier(
-    supabase: supabase,
-    deviceId: deviceId,
-    mqttService: mqtt,
-  );
-});
+      return DeviceStatusNotifier(
+        supabase: supabase,
+        deviceId: deviceId,
+        mqttService: mqtt,
+      );
+    });

@@ -16,8 +16,7 @@ class MqttService {
   final String deviceId;
 
   late final MqttServerClient _client;
-  final _messageController =
-      StreamController<MqttTopicMessage>.broadcast();
+  final _messageController = StreamController<MqttTopicMessage>.broadcast();
 
   bool _intentionalDisconnect = false;
   bool _reconnecting = false;
@@ -98,14 +97,6 @@ class MqttService {
       '${AppConfig.mqttPrefix}/$deviceId/events',
       MqttQos.atLeastOnce,
     );
-
-    // Announce presence — retained so Flutter gets it immediately on subscribe
-    _publishRaw(
-      topic: '${AppConfig.mqttPrefix}/$deviceId/status',
-      payload: 'online',
-      qos: MqttQos.atLeastOnce,
-      retain: true,
-    );
   }
 
   void _onDisconnected() {
@@ -149,8 +140,10 @@ class MqttService {
   }
 
   void publishRelayControl(int channel, String value) {
-    assert(channel >= 1 && channel <= 4,
-        'Relay channel must be between 1 and 4');
+    assert(
+      channel >= 1 && channel <= 4,
+      'Relay channel must be between 1 and 4',
+    );
     _publishRaw(
       topic: '${AppConfig.mqttPrefix}/$deviceId/control/relay$channel',
       payload: value,
@@ -160,8 +153,10 @@ class MqttService {
   }
 
   void publishRelayOverride(int channel, String value) {
-    assert(channel >= 1 && channel <= 4,
-        'Relay channel must be between 1 and 4');
+    assert(
+      channel >= 1 && channel <= 4,
+      'Relay channel must be between 1 and 4',
+    );
     _publishRaw(
       topic: '${AppConfig.mqttPrefix}/$deviceId/override/relay$channel',
       payload: value,
